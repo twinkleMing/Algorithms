@@ -1,5 +1,6 @@
-package Algorithms.Percolation;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
+//package Algorithms.Percolation;
+//import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
 public class Percolation 
@@ -8,82 +9,77 @@ public class Percolation
 	private boolean[] sites;
 	private int top;
 	private int bottom;
-	private int numopen;
 	private WeightedQuickUnionUF connections;
 	
-	public Percolation (int N) {
-		if ( N <= 0) 
+	public Percolation(int N) {
+		if (N <= 0) 
 			throw new IndexOutOfBoundsException();
 		n = N;
 		sites = new boolean[n*n+2];
 		connections = new WeightedQuickUnionUF(sites.length);
-		for ( int i = 0; i < sites.length; i++)
+		for (int i = 0; i < n*n; i++)
 			sites[i] = false;
+		sites[n*n] = true;
+		sites[n*n+1] = false;
 		top = n*n;
 		bottom = n*n+1;
-		numopen = 0;
 	}
 	
-	public void open ( int i, int j ) {
-		int index = convert2to1(i,j);
-		if ( index == -1)
-			throw new IndexOutOfBoundsException();
+	public void open(int i, int j) {
+		int index = convert2to1(i, j);
 		if (sites[index]) 
 			return;
 		sites[index] = true;	
-		numopen++;
 		
-		int up = convert2to1(i-1, j);
-		if (up == -1)
+		if (i == 1)
 			connections.union(index, top);
-		else if (sites[up])
-				connections.union(index,up);
-		
-		int down = convert2to1(i+1, j);
-		if (down == -1) 
+		else {
+			int up = convert2to1(i-1, j);
+			if (sites[up])
+				connections.union(index, up);
+		}
+			
+		if (i == n)
 			connections.union(index, bottom);
-		else if (sites[down])
-				connections.union(index,down);		
+		else {
+			int down = convert2to1(i+1, j);
+			if (sites[down])
+				connections.union(index, down);	
+		}
 		
-		int left = convert2to1(i, j-1);
-		if (left != -1 && sites[left])
-			connections.union(index,left);		
-		
-		int right = convert2to1(i, j+1);
-		if (right != -1 && sites[right])
-			connections.union(index,right);		
-		
+		if (j != 1) {
+			int left = convert2to1(i, j-1);
+			if (sites[left])
+				connections.union(index, left);	
+		}		
+
+		if (j != n) {
+			int right = convert2to1(i, j+1);
+			if (sites[right])
+				connections.union(index, right);	
+		}
+
 	}
 
-	public boolean isOpen ( int i, int j) {
-		int index = convert2to1(i,j);
-		if ( index == -1)
-			throw new IndexOutOfBoundsException();
-		
+	public boolean isOpen(int i, int j) {
+		int index = convert2to1(i, j);		
 		return sites[index];
 	}
 	
-	public boolean isFull (int i, int j) {
-		int index = convert2to1(i,j);
-		if ( index == -1)
-			throw new IndexOutOfBoundsException();
-		
-		return connections.connected(index, top);
+	public boolean isFull(int i, int j) {
+		int index = convert2to1(i, j);		
+		return isOpen(i, j) && connections.connected(index, top);
 	}
 	
 	public boolean percolates() {
 		return connections.connected(bottom, top);
 	}
 	
-	private int convert2to1( int i, int j) {
+	private int convert2to1(int i, int j) {
+		if (i < 1 || i > n || j < 1 || j > n)
+			throw new IndexOutOfBoundsException();
 		int index = n*(i-1)+(j-1);
-		if (index >= 0 && index <= n*n-1)
-			return index;
-		else return -1;
-	}
-	
-	public double fraction() {
-		return ((double) numopen) / ((double) n*n);
+		return index;
 	}
 	
 }
