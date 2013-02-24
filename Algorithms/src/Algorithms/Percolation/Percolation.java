@@ -1,6 +1,6 @@
 
-//package Algorithms.Percolation;
-//import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+package Algorithms.Percolation;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
 public class Percolation 
