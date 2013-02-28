@@ -8,17 +8,23 @@ import edu.princeton.cs.introcs.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
 	private int N;
 	private Item[] queue;
-	
-	private void resize(int n) {
-		Item[] newq = (Item[]) new Object[n];
-		for ( int i = 0; i < N; i++)
-			newq[i] = queue[i];
-		queue = newq;		
-	}
+
 	public RandomizedQueue() {
 		queue = null;
 		N = 0;
 	}
+	
+	private void resize(int n) {
+		if (n < N)
+			throw new ArrayIndexOutOfBoundsException();
+		
+		Item[] newq = (Item[]) new Object[n];
+		for (int i = 0; i < N; i++)
+			newq[i] = queue[i];
+		queue = null;
+		queue = newq; 
+	}
+
 	
 	public boolean isEmpty() {
 		return N == 0;
@@ -52,7 +58,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 		queue[N-1] = null;
 		N--;
 		if (N > 0 && N <= queue.length/4)
-			resize(N/2);
+			resize(queue.length/2);
 		return t;
 	}
 	
@@ -75,7 +81,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 		private int current;
 		public ListIterator() {
 			order = new int[N];
-			for ( int i = 0; i < N; i++) 
+			for (int i = 0; i < N; i++) 
 				order[i] = i;
 			StdRandom.shuffle(order);
 			current = 0;
