@@ -1,7 +1,6 @@
 package Algorithms.PatternRecognition;
 
 import java.util.Arrays;
-
 import edu.princeton.cs.introcs.*;
 
 

@@ -1,11 +1,21 @@
-import java.util.Arrays;
+package Algorithms.PatternRecognition;
 
+import java.util.Arrays;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.StdDraw;
 import edu.princeton.cs.introcs.StdOut;
 
 public class Fast {
 	
+	private static String arrayToString(Point[] points, int start, int end) {
+		if ((end-start) < 2)
+			throw new ArrayIndexOutOfBoundsException();
+		String str = points[0].toString();
+		for (int i = start; i <= end; i++) {
+			str = str + " -> " + points[i].toString();
+		}
+		return str;
+	}
 	
 	public static void main (String[] args) {
 		if (args.length != 1) {
@@ -31,20 +41,40 @@ public class Fast {
 		
 		
 		for (int i = 0; i < points.length-3; i++) {
-			Point[] arraypoints = points.clone();
-			Arrays.sort(arraypoints, i+1, n, points[i].SLOPE_ORDER);
-			int k = 1;
-			double slope = points[i].slopeTo(points[i+1]);
-			for (int j = i+2; j < n; j++) {
-				double tmp = points[i].slopeTo(points[j]);
-				if (tmp == slope) {
+			Point[] arraypoints = Arrays.copyOf(points, points.length);
+			Arrays.sort(arraypoints, 0, n, points[i].SLOPE_ORDER);
+			boolean flagDrawed = false;
+			double slope = Double.NEGATIVE_INFINITY;
+			int k = 0;
+			int j;
+			for (j = 1; j < n; j++) {
+				double nextslope = arraypoints[0].slopeTo(arraypoints[j]);
+
+				if (nextslope == slope) {
 					k++;
+					if (!flagDrawed)
+						flagDrawed = (arraypoints[j].compareTo(arraypoints[0]) < 0);
 				}
+
 				else {
-					if (k >= 3) 
-				}
+					if (k >= 3 && !flagDrawed) {
+						StdOut.println(arrayToString(arraypoints, j-k, j-1));
+						arraypoints[j-1].drawTo(arraypoints[0]);
+					}
+					k = 1;
+					slope = nextslope;
+					flagDrawed = (arraypoints[j].compareTo(arraypoints[0]) < 0);
+				}				
+				
 			}
+			if (k >= 3 && !flagDrawed) {
+				StdOut.println(arrayToString(arraypoints, j-k, j-1));
+				arraypoints[j-1].drawTo(arraypoints[0]);
+			}	
+			
 			
 		}
+		StdDraw.show(0);	
 	}
+		
 }
