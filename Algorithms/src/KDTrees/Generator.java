@@ -1,3 +1,5 @@
+package KDTrees;
+
 /*************************************************************************
  *  Compilation:  javac Generator.java
  *  Execution:    java Generator N

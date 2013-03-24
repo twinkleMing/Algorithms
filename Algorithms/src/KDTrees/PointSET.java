@@ -1,9 +1,12 @@
-package KDTrees;
+/*
+ * package KDTrees;
+
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.SET;
+ */
 public class PointSET {
-	SET<Point2D> set;
+	private SET<Point2D> set;
 	
 	public PointSET() {
 		set = new SET<Point2D>();

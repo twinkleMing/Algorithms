@@ -1,3 +1,12 @@
+package KDTrees;
+
+import java.io.File;
+import java.io.IOException;
+
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.introcs.In;
+import edu.princeton.cs.introcs.StdDraw;
+
 /*************************************************************************
  *  Compilation:  javac RangeSearchVisualizer.java
  *  Execution:    java RangeSearchVisualizer input.txt
@@ -19,7 +28,6 @@ public class RangeSearchVisualizer {
 
         String filename = args[0];
         In in = new In(filename);
-
 
         StdDraw.show(0);
 

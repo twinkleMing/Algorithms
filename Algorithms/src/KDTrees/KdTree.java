@@ -1,10 +1,14 @@
+/*
 package KDTrees;
+
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.introcs.StdDraw;
 
-
+*/
+import java.util.HashSet;
+import java.util.Set;
 
 public class KdTree {
 	private Node root;
@@ -93,43 +97,111 @@ public class KdTree {
 		if (n.isVertical) {
 			StdDraw.setPenColor(StdDraw.RED);
 			StdDraw.line(n.point.x(), rect.ymin(), n.point.x(), rect.ymax());	
-			draw(n.left, new RectHV(rect.xmin(),rect.ymin(),n.point.x(), rect.ymax()));
-			draw(n.right, new RectHV(n.point.x(),rect.ymin(),rect.xmax(), rect.ymax()));
+			if (n.left != null)
+				draw(n.left, new RectHV(rect.xmin(),rect.ymin(),n.point.x(), rect.ymax()));
+			if (n.right != null)
+				draw(n.right, new RectHV(n.point.x(),rect.ymin(),rect.xmax(), rect.ymax()));
 		}
 		else {
 			StdDraw.setPenColor(StdDraw.BLUE);
-			StdDraw.line(rect.xmin(), n.point.y(), rect.xmax(), n.point.y());	
-			draw(n.left, new RectHV(rect.xmin(),rect.ymin(), rect.xmax(), n.point.y()));
-			draw(n.right, new RectHV(rect.xmin(), n.point.y(), rect.xmax(), rect.ymax()));
+			StdDraw.line(rect.xmin(), n.point.y(), rect.xmax(), n.point.y());
+			if (n.left != null)
+				draw(n.left, new RectHV(rect.xmin(),rect.ymin(), rect.xmax(), n.point.y()));
+			if (n.right != null)
+				draw(n.right, new RectHV(rect.xmin(), n.point.y(), rect.xmax(), rect.ymax()));
 		}
 		
 		
 	}
 	
 	public void draw() {
-		draw (root, new RectHV(1.0, 1.0, 1.0, 1.0));
+		draw (root, new RectHV(0.0, 0.0, 1.0, 1.0));
 	}
 	
-	private void range(Node n, SET<Point2D> set, RectHV rect) {
+	private void range(Node n, Set<Point2D> set, RectHV rect) {
+		if ( n == null) 
+			return;
+		
 		if (rect.contains(n.point))
 			set.add(n.point);
 		
 		if (n.isVertical) {
-			RectHV subrect = new RectHV(rect.xmin(),rect.ymin(),n.point.x(), rect.ymax());
-			if (rect.intersects(subrect)) {
-				//range(n.left, set, rect.)
-			}
-			draw(n.left, ));
-			draw(n.right, new RectHV(n.point.x(),rect.ymin(),rect.xmax(), rect.ymax()));
+			if (rect.xmin() <= n.point.x()) 
+				range(n.left, set, rect);
+			if (rect.xmax() >= n.point.x())
+				range(n.right, set, rect);
 		}
 		else {
-			StdDraw.setPenColor(StdDraw.BLUE);
-			StdDraw.line(rect.xmin(), n.point.y(), rect.xmax(), n.point.y());	
-			draw(n.left, new RectHV(rect.xmin(),rect.ymin(), rect.xmax(), n.point.y()));
-			draw(n.right, new RectHV(rect.xmin(), n.point.y(), rect.xmax(), rect.ymax()));
-		}		
+			if (rect.ymin() <= n.point.y())
+				range(n.left, set, rect);
+			if (rect.ymax() >= n.point.y())	
+				range(n.right, set, rect);
+		}	
 	}
 	public Iterable<Point2D> range(RectHV rect) {
+		Set<Point2D> set = new HashSet<Point2D>();
+		range(root, set, rect);
+		return set;
+		
+	}
+	
+	private Point2D nearest(Point2D p, Node n, Point2D nearpoint, double neardist) {
+		if (n == null)
+			return null;
+		
+		Point2D currnearpoint = nearpoint;
+		double currneardist = neardist;
+		if (nearpoint == null || n.point.distanceSquaredTo(p) < neardist) {
+			currnearpoint = n.point;
+			currneardist = n.point.distanceSquaredTo(p);
+		}
+		Point2D leftNear, rightNear;
+		
+		if ((n.isVertical && p.x() <= n.point.x()) || (!n.isVertical && p.y() <= n.point.y())) {
+			leftNear = nearest(p, n.left, currnearpoint, currneardist);
+			if (leftNear != null && leftNear.distanceSquaredTo(p) < currneardist) {
+				currnearpoint = leftNear;
+				currneardist = leftNear.distanceSquaredTo(p);
+			}
+			double distToLine = 0.0;
+			if (n.isVertical)
+				distToLine = Math.pow(Math.abs(p.x() - n.point.x()), 2);
+			else
+				distToLine = Math.pow(Math.abs(p.y() - n.point.y()), 2);
+			if (distToLine < currneardist){
+				rightNear = nearest(p, n.right, currnearpoint, currneardist);
+				if (rightNear != null && rightNear.distanceSquaredTo(p) < currneardist) {
+					currnearpoint = rightNear;
+					currneardist = rightNear.distanceSquaredTo(p);
+				}
+			}
+		}
+				
+		if ((n.isVertical && p.x() > n.point.x()) || (!n.isVertical && p.y() > n.point.y())) {
+			rightNear = nearest(p, n.right, currnearpoint, currneardist);
+			if (rightNear != null && rightNear.distanceSquaredTo(p) < currneardist) {
+				currnearpoint = rightNear;
+				currneardist = rightNear.distanceSquaredTo(p);
+			}
+			double distToLine = 0.0;
+			if (n.isVertical)
+				distToLine = Math.pow(Math.abs(p.x() - n.point.x()), 2);
+			else
+				distToLine = Math.pow(Math.abs(p.y() - n.point.y()), 2);
+			if (distToLine < currneardist){
+				leftNear = nearest(p, n.left, currnearpoint, currneardist);
+				if (leftNear != null && leftNear.distanceSquaredTo(p) < currneardist) {
+					currnearpoint = leftNear;
+					currneardist = leftNear.distanceSquaredTo(p);
+				}
+			}
+		}				
+		
+		return currnearpoint;
+				
+	}
+	public Point2D nearest(Point2D p) {
+		return nearest(p, root, null, 0.0);
 		
 	}
 }

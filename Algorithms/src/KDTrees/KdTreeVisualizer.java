@@ -1,3 +1,5 @@
+package KDTrees;
+
 /*************************************************************************
  *  Compilation:  javac KdTreeVisualizer.java
  *  Execution:    java KdTreeVisualizer
@@ -7,6 +9,8 @@
  *  to a kd-tree and draw the resulting kd-tree.
  *
  *************************************************************************/
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.introcs.StdDraw;
 
 public class KdTreeVisualizer {
 
