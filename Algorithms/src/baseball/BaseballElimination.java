@@ -37,7 +37,7 @@ public class BaseballElimination {
 		team_indexes = new Hashtable<String, Integer>();
 		
 		for (int i = 0; i < N; i++) {
-			line = in.readLine();
+			line = in.readLine().trim();
 			String[] data = line.split("\\s+");
 			teams[i] = data[0];
 			team_indexes.put(teams[i], i);
