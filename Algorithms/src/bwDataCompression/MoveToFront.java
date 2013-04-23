@@ -1,4 +1,7 @@
 package bwDataCompression;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import  edu.princeton.cs.introcs.*;
 
 
@@ -30,7 +33,8 @@ public class MoveToFront {
 				i++;
 				p = p.next;
 			}
-			BinaryStdOut.write(i);
+			BinaryStdOut.write(i,8);
+			BinaryStdOut.flush();
 			if (i != 0) {
 				Node q = p.next;
 				p.next = p.next.next;
@@ -44,9 +48,10 @@ public class MoveToFront {
 	}
 	
 	public static void decode() {
+		start = new Node (-1, null);
 		Node p = start;
-		for (int i = -1; i < R; i++) {
-			p = new Node(i,null);
+		for (int i = 0; i < R; i++) {
+			p.next = new Node(i,null);
 			p = p.next;
 		}
 		while (!BinaryStdIn.isEmpty()) {
@@ -56,6 +61,7 @@ public class MoveToFront {
 				p = p.next;
 			}
 			BinaryStdOut.write((char) p.next.value);
+			BinaryStdOut.flush();
 			if (c != 0) {
 				Node q = p.next;
 				p.next = p.next.next;
@@ -67,9 +73,11 @@ public class MoveToFront {
 		}		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		if (args.length != 1)
 			throw new IllegalArgumentException();
+		System.setIn(new FileInputStream("src/bwDataCompression/abra_result.txt"));
+		System.setIn(new FileInputStream("src/bwDataCompression/abra.txt"));
 		char a = args[0].charAt(0);
 		if (a == '-') encode();
 		else if (a == '+') decode();
