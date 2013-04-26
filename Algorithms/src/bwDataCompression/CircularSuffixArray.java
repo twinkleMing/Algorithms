@@ -1,4 +1,4 @@
-package bwDataCompression;
+//package bwDataCompression;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -8,7 +8,7 @@ public class CircularSuffixArray {
 	private Integer[] index;
 	private String S;
 	
-	public class SuffixComparator implements Comparator<Integer> {
+	private class SuffixComparator implements Comparator<Integer> {
 
 		public int compare(Integer a, Integer b) {
 			while (S.charAt(a) == S.charAt(b)) {

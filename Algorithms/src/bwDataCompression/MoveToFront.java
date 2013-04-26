@@ -1,10 +1,11 @@
-package bwDataCompression;
+//package bwDataCompression;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+/*
+import edu.princeton.cs.algs4.HexDump;
 import  edu.princeton.cs.introcs.*;
 
-
+*/
 public class MoveToFront {
 	
 	private static int R = 256;
@@ -44,6 +45,8 @@ public class MoveToFront {
 
 			
 		}
+
+		
 		
 	}
 	
@@ -56,12 +59,15 @@ public class MoveToFront {
 		}
 		while (!BinaryStdIn.isEmpty()) {
 			char c = BinaryStdIn.readChar();
+			//StdOut.printf("%02x", c & 0xff);
+			//BinaryStdOut.flush();		
 			p = start;
 			for (int i = 0; i < c; i++) {
 				p = p.next;
 			}
-			BinaryStdOut.write((char) p.next.value);
+			BinaryStdOut.write(p.next.value);
 			BinaryStdOut.flush();
+
 			if (c != 0) {
 				Node q = p.next;
 				p.next = p.next.next;
@@ -69,15 +75,15 @@ public class MoveToFront {
 				start.next = q;				
 			}
 
-			
 		}		
 	}
+	
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		if (args.length != 1)
 			throw new IllegalArgumentException();
-		System.setIn(new FileInputStream("src/bwDataCompression/abra_result.txt"));
-		System.setIn(new FileInputStream("src/bwDataCompression/abra.txt"));
+		//System.setIn(new FileInputStream("src/bwDataCompression/abra_result.txt"));
+		//System.setIn(new FileInputStream("src/bwDataCompression/abra.txt"));
 		char a = args[0].charAt(0);
 		if (a == '-') encode();
 		else if (a == '+') decode();
